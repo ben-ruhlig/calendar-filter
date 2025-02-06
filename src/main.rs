@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 use tokio;
+use chrono::{DateTime, Utc};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
@@ -22,8 +23,8 @@ struct Calendar {
 struct Course {
     id: u64,
     name: String,
-    start_at: Option<String>,
-    end_at: Option<String>,
+    start_at: Option<DateTime<Utc>>,
+    end_at: Option<DateTime<Utc>>,
     calendar: Calendar,
     // You could add more fields here if you’d like to filter on course state.
 }
@@ -33,8 +34,8 @@ struct CalendarEvent {
     id: i64,
     title: String,
     description: Option<String>,
-    start_at: String,
-    end_at: Option<String>,
+    start_at: DateTime<Utc>,
+    end_at: Option<DateTime<Utc>>,
     context_type: String,
 }
 
@@ -151,7 +152,17 @@ async fn main() -> Result<()> {
         .context("Failed to parse config file")?;
 
         let client = CanvasClient::new(config.api_token)?;
-        let courses = client.get_courses().await?;
+        let mut courses = client.get_courses().await?;
+
+        // Sort courses by end_at, most recent first
+        courses.sort_by(|a, b| {
+            match (a.end_at, b.end_at) {
+                (Some(end_a), Some(end_b)) => end_b.cmp(&end_a), // Sort by end_at descending
+                (Some(_), None) => std::cmp::Ordering::Less,    // a has end_at, b doesn't, a comes first
+                (None, Some(_)) => std::cmp::Ordering::Greater, // b has end_at, a doesn't, b comes first
+                (None, None) => std::cmp::Ordering::Equal,      // Both don't have end_at, keep original order
+            }
+        });
 
         // Debug: print out events to console
         println!("Fetched {} courses", courses.len());
