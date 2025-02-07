@@ -1,11 +1,15 @@
 mod cli;
-mod utils;
-pub use utils::args::CliArgs;
-pub use utils::canvas;
-pub use utils::config;
+mod config;
+mod api;
+pub use api::canvas;
 use anyhow::{Context, Result};
 
-pub fn run(args: CliArgs) -> Result<()> {
+pub struct Args {
+    pub setup: bool,
+    pub sync: bool,
+}
+
+pub fn run(args: Args) -> Result<()> {
     if args.setup {
         cli::setup::run().context("setup failed.")?;
     }
