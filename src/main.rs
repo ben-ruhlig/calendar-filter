@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 use tokio;
+use tokio::task;
 use chrono::{DateTime, Utc};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -152,21 +153,21 @@ async fn main() -> Result<()> {
         .context("Failed to parse config file")?;
 
         let client = CanvasClient::new(config.api_token)?;
-        let mut courses = client.get_courses().await?;
 
-        // Sort courses by end_at, most recent first
-        courses.sort_by(|a, b| {
-            match (a.end_at, b.end_at) {
-                (Some(end_a), Some(end_b)) => end_b.cmp(&end_a), // Sort by end_at descending
-                (Some(_), None) => std::cmp::Ordering::Less,    // a has end_at, b doesn't, a comes first
-                (None, Some(_)) => std::cmp::Ordering::Greater, // b has end_at, a doesn't, b comes first
-                (None, None) => std::cmp::Ordering::Equal,      // Both don't have end_at, keep original order
-            }
+        // Spawn a task to fetch courses
+        let courses_task = task::spawn(async move {
+            client.get_courses().await
         });
 
+        //Potentially do other independent tasks here while courses are fetched
+
+        // Await the courses and sort them
+        let courses = courses_task.await.context("Failed to get courses")??;
+        let sorted_courses = sort_courses(courses);
+
         // Debug: print out events to console
-        println!("Fetched {} courses", courses.len());
-        for course in &courses {
+        println!("Fetched {} courses", sorted_courses.len());
+        for course in &sorted_courses {
             println!("{:#?}", course);
         }
 
@@ -176,6 +177,18 @@ async fn main() -> Result<()> {
     }
 
     Ok(())
+}
+
+fn sort_courses(mut courses: Vec<Course>) -> Vec<Course> {
+    courses.sort_by(|a, b| {
+        match (a.end_at, b.end_at) {
+            (Some(end_a), Some(end_b)) => end_b.cmp(&end_a),
+            (Some(_), None) => std::cmp::Ordering::Less,
+            (None, Some(_)) => std::cmp::Ordering::Greater,
+            (None, None) => std::cmp::Ordering::Equal,
+        }
+    });
+    courses
 }
 
 fn get_config_path() -> Result<PathBuf> {
