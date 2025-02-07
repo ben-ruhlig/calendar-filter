@@ -1,8 +1,23 @@
 use crate::config::Config;
-use crate::config::Course;
 use anyhow::{Context, Result};
 use std::time::Duration;
 use ureq::Agent;
+use serde::{Deserialize, Serialize};
+use chrono::{DateTime, Utc};
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Calendar {
+    ics: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Course {
+    id: u64,
+    name: String,
+    start_at: DateTime<Utc>,
+    end_at: DateTime<Utc>,
+    calendar: Calendar,
+}
 
 pub struct CanvasClient {
     agent: Agent,
@@ -11,7 +26,7 @@ pub struct CanvasClient {
 }
 
 impl CanvasClient {
-    fn new(api_token: String) -> Result<Self> {
+    pub fn new(api_token: String) -> Result<Self> {
         let agent = Agent::config_builder()
             .timeout_global(Some(Duration::from_secs(5)))
             .build()
@@ -30,7 +45,8 @@ impl CanvasClient {
         })
     }
 
-    fn get_courses(&self) -> Result<Vec<Course>> {
+    pub fn get_courses(&self) -> Result<Vec<Course>> {
+        println!("Running get courses");
         let url = format!("{}/courses", self.base_url);
         let response: Vec<Course> = self
             .agent
@@ -44,6 +60,8 @@ impl CanvasClient {
             .body_mut()
             .read_json::<Vec<Course>>()
             .context("Failed to parse courses")?;
+        println!("response completed");
+        println!("{:#?}", response);
         Ok(response)
     }
 }
