@@ -14,8 +14,8 @@ pub struct Calendar {
 pub struct Course {
     id: u64,
     name: String,
-    start_at: DateTime<Utc>,
-    end_at: DateTime<Utc>,
+    start_at: Option<DateTime<Utc>>,
+    end_at: Option<DateTime<Utc>>,
     calendar: Calendar,
 }
 

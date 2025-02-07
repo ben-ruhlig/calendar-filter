@@ -7,10 +7,10 @@ use anyhow::{Context, Result};
 
 pub fn run(args: CliArgs) -> Result<()> {
     if args.setup {
-        let _ = cli::setup::run().context("setup failed.");
+        cli::setup::run().context("setup failed.")?;
     }
     if args.sync {
-        println!("Syncing courses");
+        cli::sync::run().context("setup failed.")?;
     }
     Ok(())
 }
