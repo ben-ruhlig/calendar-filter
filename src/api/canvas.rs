@@ -26,7 +26,7 @@ impl Course {
     pub fn is_active(&self) -> bool {
         let now_utc = Utc::now();
         if let Some(end_time) = self.end_at {
-            end_time.cmp(&now_utc) == Ordering::Less
+            end_time.cmp(&now_utc) != Ordering::Less
         } else {
             false
         }
