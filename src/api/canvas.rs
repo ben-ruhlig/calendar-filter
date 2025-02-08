@@ -60,7 +60,6 @@ impl CanvasClient {
     }
 
     pub fn get_courses(&self) -> Result<Vec<Course>> {
-        println!("Running get courses");
         let url = format!("{}/courses", self.base_url);
         let response: Vec<Course> = self
             .agent
@@ -74,8 +73,6 @@ impl CanvasClient {
             .body_mut()
             .read_json::<Vec<Course>>()
             .context("Failed to parse courses")?;
-        println!("response completed");
-        println!("{:#?}", response);
         Ok(response)
     }
 }
