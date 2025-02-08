@@ -1,4 +1,4 @@
-## 📖 CanvasCLI - Command Line Interface for Canvas LMS (canvascli)
+## 📖 CanvasCLI - Command Line Interface for Canvas LMS
 CanvasCLI is a powerful tool for UPenn students to interact with the Canvas LMS from the command line.
 
 [UPenn Canvas LMS](canvas.upenn.edu) api.
@@ -49,14 +49,15 @@ canvascli --help         # Show general help
 canvascli <command> --help  # Show help for a specific command
 ```
 
-🔹 **Designed for efficiency** – Short and intuitive commands.
-🔹 **Flexible & Powerful** – Easily manage courses and calendars from the CLI.
-🔹 **Expanding Features** – More integrations coming soon!
+## Key Features
+
+**🔹 Designed for efficiency**
+Short and intuitive commands
+
+**🔹 Flexible & Powerful**
+Easily manage courses and calendars from the CLI
+
+**🔹 Expanding Features**
+More integrations coming soon!
 
 📌 *Stay tuned for updates and contributions!*
-
-
-### Potential future feature implementation..
-- Add more [schools](https://community.canvaslms.com/t5/Canvas-Basics-Guide/Where-do-I-find-my-institution-s-URL-to-access-Canvas/ta-p/82)
-- Integrated directly with google calendars to automatically setup feed to newly published .ics feed.
-- pending further thoughts...
