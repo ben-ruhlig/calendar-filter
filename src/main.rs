@@ -17,9 +17,9 @@ pub struct CliArgs {
 
 fn main() {
     let cliargs = CliArgs::parse();
-    let args = canvas_calender_cli::Args {
+    let args = canvascli::Args {
         setup: cliargs.setup,
         sync: cliargs.sync,
     };
-    canvas_calender_cli::run(args).unwrap();
+    canvascli::run(args).unwrap();
 }

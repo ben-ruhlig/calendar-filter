@@ -1,5 +1,5 @@
 [package]
-name = "canvas_calender_cli"
+name = "canvascli"
 version = "0.1.0"
 edition = "2021"
 
