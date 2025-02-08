@@ -14,15 +14,16 @@ pub fn run () -> Result<()> {
     let courses = client.get_courses().context("Failed to retrieve courses")?;
 
     // Alert user if there are no courses, returen.
-    if courses.len() != 0 {
+    if courses.is_empty() {
         println!("You have no courses in canvas yet");
         return Ok(());
     }
 
     println!("Active courses:");
-    courses.iter().for_each(|course| {
-        println!("{:#?}", course);
-    });
-
+    courses.iter()
+        .filter(|course| course.is_active())
+        .for_each(|course| {
+            println!("{:#?}", course);
+        });
     Ok(())
 }
