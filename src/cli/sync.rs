@@ -1,9 +1,9 @@
-use crate::config::{get_config_path, Config};
 use crate::canvas::CanvasClient;
+use crate::config::{get_config_path, Config};
 use anyhow::{Context, Ok, Result};
 use std::fs;
 
-pub fn run () -> Result<()> {
+pub fn run() -> Result<()> {
     let config_path = get_config_path().context("Failed to get config path")?;
     let config: Config = serde_json::from_str(
         &fs::read_to_string(&config_path).context("Failed to read config file")?,
@@ -20,10 +20,11 @@ pub fn run () -> Result<()> {
     }
 
     println!("Active courses:");
-    courses.iter()
+    courses
+        .iter()
         .filter(|course| course.is_active())
         .for_each(|course| {
-            println!("{:#?}", course);
+            println!("{}", course);
         });
     Ok(())
 }

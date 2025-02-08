@@ -30,6 +30,17 @@ impl Course {
     }
 }
 
+impl fmt::Display for Course {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{} (ID: {})",
+            self.name,
+            self.id,
+        )
+    }
+}
+
 pub struct CanvasClient {
     agent: Agent,
     base_url: String,
