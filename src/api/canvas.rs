@@ -1,12 +1,9 @@
 use crate::config::Config;
 use anyhow::{Context, Result};
-use std::{
-    time::Duration,
-    cmp::Ordering
-};
-use ureq::Agent;
-use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
+use std::{cmp::Ordering, fmt, time::Duration};
+use ureq::Agent;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Calendar {

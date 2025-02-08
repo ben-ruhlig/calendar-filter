@@ -19,7 +19,7 @@ fn main() {
     let cliargs = CliArgs::parse();
     let args = canvas_calender_cli::Args {
         setup: cliargs.setup,
-        sync: cliargs.sync
+        sync: cliargs.sync,
     };
     canvas_calender_cli::run(args).unwrap();
 }

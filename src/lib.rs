@@ -1,8 +1,8 @@
+mod api;
 mod cli;
 mod config;
-mod api;
-pub use api::canvas;
 use anyhow::{Context, Result};
+pub use api::canvas;
 
 pub struct Args {
     pub setup: bool,
