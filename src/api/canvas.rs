@@ -1,6 +1,9 @@
 use crate::config::Config;
 use anyhow::{Context, Result};
-use std::time::Duration;
+use std::{
+    time::Duration,
+    cmp::Ordering
+};
 use ureq::Agent;
 use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Utc};
@@ -17,6 +20,17 @@ pub struct Course {
     start_at: Option<DateTime<Utc>>,
     end_at: Option<DateTime<Utc>>,
     calendar: Calendar,
+}
+
+impl Course {
+    pub fn is_active(&self) -> bool {
+        let now_utc = Utc::now();
+        if let Some(end_time) = self.end_at {
+            end_time.cmp(&now_utc) == Ordering::Less
+        } else {
+            false
+        }
+    }
 }
 
 pub struct CanvasClient {

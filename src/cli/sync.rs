@@ -13,12 +13,16 @@ pub fn run () -> Result<()> {
     let client = CanvasClient::new(config.api_token)?;
     let courses = client.get_courses().context("Failed to retrieve courses")?;
 
-    assert!(courses.len() != 0);
-
-    // Debug: print out events to console
-    for course in &courses {
-        println!("{:#?}", course);
+    // Alert user if there are no courses, returen.
+    if courses.len() != 0 {
+        println!("You have no courses in canvas yet");
+        return Ok(());
     }
+
+    println!("Active courses:");
+    courses.iter().for_each(|course| {
+        println!("{:#?}", course);
+    });
 
     Ok(())
 }
