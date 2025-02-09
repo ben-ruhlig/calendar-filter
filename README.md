@@ -46,8 +46,9 @@ canvascli calendar filter                            # Launch interactive termin
 ### 📆 Publishing (Google Drive - MVP)
 ```sh
 canvascli calendar publish setup                     # Setup Google Drive API authentication
-canvascli calendar publish --course <id|name> --filtered  # Publish a single course's .ics feed
-canvascli calendar publish --all --filtered               # Publish all active course .ics feeds
+canvascli calendar publish --course <id|name>        # Publish a single course's .ics feed
+canvascli calendar publish --all                     # Publish all active course .ics feeds
+canvascli calendar publish --filtered                # Publish all active filtered .ics feeds
 ```
 - **First-time setup:** Users will authenticate with Google Drive via OAuth2.
 - **Publishing:** Uploads `.ics` to Google Drive and provides a shareable link.
