@@ -32,12 +32,7 @@ impl Course {
 
 impl fmt::Display for Course {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "{} (ID: {})",
-            self.name,
-            self.id,
-        )
+        write!(f, "{} (ID: {})", self.name, self.id,)
     }
 }
 

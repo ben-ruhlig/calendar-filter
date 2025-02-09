@@ -34,14 +34,19 @@ pub fn run_calendar_ls(course: &Option<String>, filtered: bool) -> Result<()> {
         cli::calendar::ls::run_course(course).context("calendar ls --course failed")
     } else {
         cli::calendar::ls::run_all().context("calendar ls failed")
-    }   
+    }
 }
 
 pub fn run_calendar_filter() -> Result<()> {
     cli::calendar::filter::run().context("calendar filter TUI failed")
 }
 
-pub fn run_calendar_publish(setup: bool, course: &Option<String>, all: bool, filtered: bool) -> Result<()> {
+pub fn run_calendar_publish(
+    setup: bool,
+    course: &Option<String>,
+    all: bool,
+    filtered: bool,
+) -> Result<()> {
     if setup {
         cli::calendar::publish::publish_setup().context("publish setup failed")
     } else if course.is_some() {

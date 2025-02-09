@@ -17,5 +17,5 @@ pub fn run_course(course: &Option<String>) -> Result<()> {
     } else {
         println!("No course argument was provided");
     }
-    Ok(())   
+    Ok(())
 }

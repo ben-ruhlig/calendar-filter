@@ -20,16 +20,16 @@ pub struct Cli {
 pub enum Commands {
     /// Setup Canvas API connection
     Setup,
-    
+
     /// Sync course data from Canvas API
     Sync,
-    
+
     /// Course management commands
     Course {
         #[command(subcommand)]
         command: CourseCommands,
     },
-    
+
     /// Calendar management commands
     Calendar {
         #[command(subcommand)]
@@ -82,7 +82,7 @@ pub enum CalendarCommands {
 
 fn main() {
     let cli = Cli::parse();
-    
+
     match &cli.command {
         Commands::Setup => {
             canvascli::run_setup().unwrap();
@@ -90,25 +90,26 @@ fn main() {
         Commands::Sync => {
             canvascli::run_sync().unwrap();
         }
-        Commands::Course { command } => {
-            match command {
-                CourseCommands::Ls { all, published } => {
-                    canvascli::run_course_ls(*all, *published).unwrap();
-                }
+        Commands::Course { command } => match command {
+            CourseCommands::Ls { all, published } => {
+                canvascli::run_course_ls(*all, *published).unwrap();
             }
-        }
-        Commands::Calendar { command } => {
-            match command {
-                CalendarCommands::Ls { course, filtered } => {
-                    canvascli::run_calendar_ls(course, *filtered).unwrap();
-                }
-                CalendarCommands::Filter => {
-                    canvascli::run_calendar_filter().unwrap();
-                }
-                CalendarCommands::Publish { setup, course, all, filtered } => {
-                    canvascli::run_calendar_publish(*setup, course, *all, *filtered).unwrap();
-                }
+        },
+        Commands::Calendar { command } => match command {
+            CalendarCommands::Ls { course, filtered } => {
+                canvascli::run_calendar_ls(course, *filtered).unwrap();
             }
-        }
+            CalendarCommands::Filter => {
+                canvascli::run_calendar_filter().unwrap();
+            }
+            CalendarCommands::Publish {
+                setup,
+                course,
+                all,
+                filtered,
+            } => {
+                canvascli::run_calendar_publish(*setup, course, *all, *filtered).unwrap();
+            }
+        },
     }
 }

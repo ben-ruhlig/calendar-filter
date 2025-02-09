@@ -1,4 +1,4 @@
+pub mod calendar;
+pub mod course;
 pub mod setup;
 pub mod sync;
-pub mod course;
-pub mod calendar;
