@@ -44,14 +44,11 @@ pub fn run_calendar_filter() -> Result<()> {
 
 pub fn run_calendar_publish(course: &Option<String>, all: bool, filtered: bool) -> Result<()> {
     if let Some(course_str) = course {
-        cli::calendar::publish::publish_course(course_str)
-            .context("publish course failed")
+        cli::calendar::publish::publish_course(course_str).context("publish course failed")
     } else if all {
-        cli::calendar::publish::publish_all()
-            .context("publish all failed")
+        cli::calendar::publish::publish_all().context("publish all failed")
     } else if filtered {
-        cli::calendar::publish::publish_filtered()
-            .context("publish filtered failed")
+        cli::calendar::publish::publish_filtered().context("publish filtered failed")
     } else {
         // Error is handled upstream here rather than inside publish.rs functions.
         Err(anyhow::anyhow!(
@@ -65,13 +62,12 @@ pub fn run_calendar_publish_setup() -> Result<()> {
 }
 
 pub fn run_calendar_publish_ls() -> Result<()> {
-    cli::calendar::publish::publish_ls().context("publish setup failed")
+    cli::calendar::publish::publish_ls().context("publish ls failed")
 }
 
-/// Placeholder: Unpublish a published calendar feed.
 pub fn run_calendar_unpublish(course: &Option<String>) -> Result<()> {
     if let Some(course) = course {
-        cli::calendar::publish::unpublish_course(course).context("publish course failed")
+        cli::calendar::publish::unpublish_course(course).context("unpublish course failed")
     } else {
         println!("TODO: Implement better error message");
         println!("Invalid: Must provide a course by ID or Name");
@@ -79,14 +75,10 @@ pub fn run_calendar_unpublish(course: &Option<String>) -> Result<()> {
     }
 }
 
-/// Placeholder: Enable automatic sync and publish every 4 hours.
 pub fn run_calendar_autoupdate_enable() -> Result<()> {
-    println!("TODO: Implement auto-update enable (create cron job or schedule task)");
-    Ok(())
+    cli::calendar::publish::autoupdate_enable().context("autoupdate enable failed")
 }
 
-/// Placeholder: Disable the scheduled auto-update task.
 pub fn run_calendar_autoupdate_disable() -> Result<()> {
-    println!("TODO: Implement auto-update disable (remove cron job or scheduled task)");
-    Ok(())
+    cli::calendar::publish::autoupdate_disable().context("autoupdate disable failed")
 }

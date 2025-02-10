@@ -85,7 +85,7 @@ pub enum CalendarCommands {
     Publish {
         /// Optional subcommand for publishing setup.
         #[command(subcommand)]
-        setup: Option<PublishSetupCommand>,
+        command: Option<CalendarPublishCommands>,
         /// The course ID or name for which to publish calendar feeds.
         #[arg(long)]
         course: Option<String>,
@@ -115,9 +115,11 @@ pub enum CalendarCommands {
 ///
 /// Invoked when running "canvascli calendar publish setup".
 #[derive(Subcommand, Debug, Clone)]
-pub enum PublishSetupCommand {
+pub enum CalendarPublishCommands {
     /// Run the publish setup.
     Setup,
+    /// List published calendars
+    Ls,
 }
 
 /// Subcommands for the auto-update functionality.
@@ -159,13 +161,22 @@ fn main() {
             }
             // Handles the publish command.
             CalendarCommands::Publish {
-                setup,
+                command,
                 course,
                 all,
                 filtered,
             } => {
-                if let Some(PublishSetupCommand::Setup) = setup {
-                    canvascli::run_calendar_publish_setup().unwrap();
+                if let Some(command) = command {
+                    match command {
+                        // Setup API to Publish Calendar
+                        CalendarPublishCommands::Setup => {
+                            canvascli::run_calendar_publish_setup().unwrap();
+                        }
+                        // List Publisehd Calendars
+                        CalendarPublishCommands::Ls => {
+                            canvascli::run_calendar_publish_ls().unwrap();
+                        }
+                    }
                 } else {
                     canvascli::run_calendar_publish(course, *all, *filtered).unwrap();
                 }

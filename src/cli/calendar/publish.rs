@@ -27,7 +27,17 @@ pub fn unpublish_course(course: &String) -> Result<()> {
 }
 
 pub fn publish_course(course: &String) -> Result<()> {
-    println!("TODO: Implement unpublish course");
+    println!("TODO: Implement publish course");
     println!("Course: {}", course);
+    Ok(())
+}
+
+pub fn autoupdate_enable() -> Result<()> {
+    println!("TODO: Implement autoupdate enable");
+    Ok(())
+}
+
+pub fn autoupdate_disable() -> Result<()> {
+    println!("TODO: Implement autoupdate disable");
     Ok(())
 }
