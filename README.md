@@ -46,6 +46,7 @@ canvascli calendar filter                            # Launch interactive termin
 ### 📆 Publishing (Google Drive - MVP)
 ```sh
 canvascli calendar publish setup                     # Setup Google Drive API authentication
+canvascli calendar publish ls                        # List all published calendars
 canvascli calendar publish --course <id|name>        # Publish a single course's .ics feed
 canvascli calendar publish --all                     # Publish all active course .ics feeds
 canvascli calendar publish --filtered                # Publish all active filtered .ics feeds
@@ -76,12 +77,6 @@ crontab -e  # Open the crontab editor
 ```
 
 📌 **Note:** Auto-updates only run when the user's computer is turned on.
-
-### 📜 Viewing Published Feeds
-```sh
-canvascli calendar published              # List all courses with published .ics feeds and their URLs
-canvascli calendar published --course <id|name>  # Show the .ics link for a specific course
-```
 
 ### 🗑️ Unpublishing
 ```sh

@@ -1,6 +1,7 @@
 mod api;
 mod cli;
 mod config;
+
 use anyhow::{Context, Result};
 pub use api::canvas;
 
@@ -42,18 +43,50 @@ pub fn run_calendar_filter() -> Result<()> {
 }
 
 pub fn run_calendar_publish(course: &Option<String>, all: bool, filtered: bool) -> Result<()> {
-    if course.is_some() {
-        cli::calendar::publish::publish_course(course).context("publish course failed")
+    if let Some(course_str) = course {
+        cli::calendar::publish::publish_course(course_str)
+            .context("publish course failed")
     } else if all {
-        cli::calendar::publish::publish_all().context("publish all failed")
+        cli::calendar::publish::publish_all()
+            .context("publish all failed")
     } else if filtered {
-        cli::calendar::publish::publish_filtered().context("publish filtered failed")
+        cli::calendar::publish::publish_filtered()
+            .context("publish filtered failed")
     } else {
-        println!("Invalid: Must provide an argument");
-        Ok(())
+        // Error is handled upstream here rather than inside publish.rs functions.
+        Err(anyhow::anyhow!(
+            "Invalid: Must provide a course argument or select a publish variant"
+        ))
     }
 }
 
 pub fn run_calendar_publish_setup() -> Result<()> {
     cli::calendar::publish::publish_setup().context("publish setup failed")
+}
+
+pub fn run_calendar_publish_ls() -> Result<()> {
+    cli::calendar::publish::publish_ls().context("publish setup failed")
+}
+
+/// Placeholder: Unpublish a published calendar feed.
+pub fn run_calendar_unpublish(course: &Option<String>) -> Result<()> {
+    if let Some(course) = course {
+        cli::calendar::publish::unpublish_course(course).context("publish course failed")
+    } else {
+        println!("TODO: Implement better error message");
+        println!("Invalid: Must provide a course by ID or Name");
+        Ok(())
+    }
+}
+
+/// Placeholder: Enable automatic sync and publish every 4 hours.
+pub fn run_calendar_autoupdate_enable() -> Result<()> {
+    println!("TODO: Implement auto-update enable (create cron job or schedule task)");
+    Ok(())
+}
+
+/// Placeholder: Disable the scheduled auto-update task.
+pub fn run_calendar_autoupdate_disable() -> Result<()> {
+    println!("TODO: Implement auto-update disable (remove cron job or scheduled task)");
+    Ok(())
 }

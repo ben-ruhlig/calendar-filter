@@ -2,7 +2,8 @@
 //!
 //! This application provides command-line access to the Canvas LMS.
 //! It supports functionalities such as setting up the API connection,
-//! synchronizing courses, filtering calendar items, and publishing calendar feeds.
+//! synchronizing courses, filtering calendar items, publishing calendar feeds,
+//! and managing auto-updates.
 
 use clap::{Parser, Subcommand};
 
@@ -34,27 +35,17 @@ pub struct Cli {
 #[derive(Subcommand, Debug, Clone)]
 pub enum Commands {
     /// Setup the Canvas API connection.
-    ///
-    /// Use this command to configure or reconfigure the connection settings required
-    /// to interact with the Canvas API.
     Setup,
-
     /// Synchronize course data from the Canvas API.
-    ///
-    /// This command triggers a sync operation that fetches the latest course data.
     Sync,
-
     /// Perform actions related to course management.
     Course {
         #[command(subcommand)]
-        /// Subcommands for course management.
         command: CourseCommands,
     },
-
     /// Perform actions related to calendar management.
     Calendar {
         #[command(subcommand)]
-        /// Subcommands for calendar management.
         command: CalendarCommands,
     },
 }
@@ -63,9 +54,6 @@ pub enum Commands {
 #[derive(Subcommand, Debug, Clone)]
 pub enum CourseCommands {
     /// List courses according to the specified filters.
-    ///
-    /// If no filter is provided, it returns only active courses.
-    /// Active courese are those with course end dates in the past.
     Ls {
         /// Show all courses including old/inactive ones.
         #[arg(long)]
@@ -92,12 +80,10 @@ pub enum CalendarCommands {
     Filter,
     /// Publish calendar feeds.
     ///
-    /// The publish command supports an optional setup subcommand
-    /// and additional options to control which feeds to publish.
+    /// This command supports an optional setup subcommand and additional options
+    /// to control which feeds to publish.
     Publish {
         /// Optional subcommand for publishing setup.
-        ///
-        /// If specified as "setup", initialization for publishing will occur.
         #[command(subcommand)]
         setup: Option<PublishSetupCommand>,
         /// The course ID or name for which to publish calendar feeds.
@@ -110,9 +96,22 @@ pub enum CalendarCommands {
         #[arg(long)]
         filtered: bool,
     },
+    /// List all published calendars.
+    PublishLs,
+    /// Unpublish a published calendar feed.
+    Unpublish {
+        /// The course ID or name for which to remove the published .ics feed.
+        #[arg(long)]
+        course: Option<String>,
+    },
+    /// Manage auto-update functionality for published feeds.
+    Autoupdate {
+        #[command(subcommand)]
+        command: AutoupdateCommands,
+    },
 }
 
-/// Subcommand for the publish setup process.
+/// Subcommands for the publish setup process.
 ///
 /// Invoked when running "canvascli calendar publish setup".
 #[derive(Subcommand, Debug, Clone)]
@@ -121,10 +120,15 @@ pub enum PublishSetupCommand {
     Setup,
 }
 
-/// Main entry point of the application.
-///
-/// This function parses the CLI arguments using `clap` and dispatches execution
-/// according to the appropriate command.
+/// Subcommands for the auto-update functionality.
+#[derive(Subcommand, Debug, Clone)]
+pub enum AutoupdateCommands {
+    /// Enable automatic calendar sync and publishing every 4 hours.
+    Enable,
+    /// Disable the scheduled auto-update task.
+    Disable,
+}
+
 fn main() {
     let cli = Cli::parse();
 
@@ -160,14 +164,29 @@ fn main() {
                 all,
                 filtered,
             } => {
-                // If the "setup" subcommand is provided, run the publish setup.
                 if let Some(PublishSetupCommand::Setup) = setup {
                     canvascli::run_calendar_publish_setup().unwrap();
                 } else {
-                    // Otherwise, process the publishing arguments.
                     canvascli::run_calendar_publish(course, *all, *filtered).unwrap();
                 }
             }
+            // List all published calendars.
+            CalendarCommands::PublishLs => {
+                canvascli::run_calendar_publish_ls().unwrap();
+            }
+            // Unpublish a calendar feed.
+            CalendarCommands::Unpublish { course } => {
+                canvascli::run_calendar_unpublish(course).unwrap();
+            }
+            // Handle auto-update scheduling commands.
+            CalendarCommands::Autoupdate { command } => match command {
+                AutoupdateCommands::Enable => {
+                    canvascli::run_calendar_autoupdate_enable().unwrap();
+                }
+                AutoupdateCommands::Disable => {
+                    canvascli::run_calendar_autoupdate_disable().unwrap();
+                }
+            },
         },
     }
 }
