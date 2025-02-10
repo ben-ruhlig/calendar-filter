@@ -41,15 +41,8 @@ pub fn run_calendar_filter() -> Result<()> {
     cli::calendar::filter::run().context("calendar filter TUI failed")
 }
 
-pub fn run_calendar_publish(
-    setup: bool,
-    course: &Option<String>,
-    all: bool,
-    filtered: bool,
-) -> Result<()> {
-    if setup {
-        cli::calendar::publish::publish_setup().context("publish setup failed")
-    } else if course.is_some() {
+pub fn run_calendar_publish(course: &Option<String>, all: bool, filtered: bool) -> Result<()> {
+    if course.is_some() {
         cli::calendar::publish::publish_course(course).context("publish course failed")
     } else if all {
         cli::calendar::publish::publish_all().context("publish all failed")
@@ -59,4 +52,8 @@ pub fn run_calendar_publish(
         println!("Invalid: Must provide an argument");
         Ok(())
     }
+}
+
+pub fn run_calendar_publish_setup() -> Result<()> {
+    cli::calendar::publish::publish_setup().context("publish setup failed")
 }

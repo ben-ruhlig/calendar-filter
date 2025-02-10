@@ -6,11 +6,11 @@ pub fn run_ls_active() -> Result<()> {
 }
 
 pub fn run_ls_all() -> Result<()> {
-    println!("TODO: Implement course ls logic");
+    println!("TODO: Implement course ls --all logic");
     Ok(())
 }
 
 pub fn run_published() -> Result<()> {
-    println!("TODO: Implement course ls logic");
+    println!("TODO: Implement course ls --published logic");
     Ok(())
 }
